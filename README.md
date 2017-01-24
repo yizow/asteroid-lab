@@ -53,6 +53,7 @@ It seems possible that we could merge these two designs by, for example, having 
 Docker provides built-in mechanisms for container orchestration, resource limitation, and isolation.
 
 ### Raw network access for experiments
+Our research indicates that docker does the hard work for us here. By default, containers have their own network interface, isolated from the host. We’re still determining how exactly to make containers networks isolated from each other, but this is certainly possible.
 
 # Materials
 
