@@ -40,7 +40,7 @@ Each node is a Raspberry Pi with Docker Engine installed, hosting at most one co
 ### Node discovery and resource allocation
 We are currently exploring two different ways of doing this.
 
-In the first, each Raspberry Pi is preconfigured with the public IP addresses of tracking servers. When a new node it boots up, it contacts one or more of these tracking servers (chosen according to location, or at random, etc. ). The node and server perform some authentication handshake to associate this node with an owner’s account. It also informs the tracking server of the hardware resources the node's owner has chosen to make available for Asteroid-Lab, and periodically updates this information. Tracking servers are responsible for maintaining a list of uniquely identifiable nodes, tracking what resources are available on each node, and responding to resource allocation requests.
+In the first, each Raspberry Pi is preconfigured with the public IP addresses of tracking servers. When a new node it boots up, it contacts one or more of these tracking servers (chosen according to location, or at random, etc.). The node and server perform some authentication handshake to associate this node with an owner’s account. It also informs the tracking server of the hardware resources the node's owner has chosen to make available for Asteroid-Lab, and periodically updates this information. Tracking servers are responsible for maintaining a list of uniquely identifiable nodes, tracking what resources are available on each node, and responding to resource allocation requests. In this way, they play a similar role to Aggregate Managers in the [GENI architecture](http://www.geni.net/documentation/geni-architecture/) and Management Authorities in the [Planet-Lab architecture](https://www.planet-lab.org/files/pdn/PDN-06-031/pdn-06-031.pdf).
 
 Resource allocation requests come from a server interface used by experimenters. This server will ask each tracking server for a lease on resources that match a hardware requirement specification provided by the experimenter. The particular details of the specification still need to be hashed out.
 
@@ -48,12 +48,11 @@ We’ve also considered having nodes self-organize to reduce the load on trackin
 
 It seems possible that we could merge these two designs by, for example, having the nodes choose other nodes as tracking servers for various time intervals.
 
-
 ### Node control and isolation
-Docker provides built-in mechanisms for container orchestration, resource limitation, and isolation.
+We hope to leverage [Docker Swarm](https://docs.docker.com/engine/swarm/) to orchestrate the nodes in a single slice for each experiment and keep experiments isolated from each other and from the host machines.
 
 ### Raw network access for experiments
-Our research indicates that docker does the hard work for us here. By default, containers have their own network interface, isolated from the host. We’re still determining how exactly to make containers networks isolated from each other, but this is certainly possible.
+Our research indicates that Docker does the hard work for us here. By default, containers have their own network interface, isolated from the host. We’re still determining how exactly to make containers networks isolated from each other, but this is certainly possible. [Overlay networks in Swarm mode](https://docs.docker.com/engine/userguide/networking/#/an-overlay-network-with-docker-engine-swarm-mode) look particularly promising.
 
 # Materials
 
