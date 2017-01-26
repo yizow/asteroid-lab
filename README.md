@@ -12,6 +12,14 @@ Specifically, Asteroid-Lab will accomplish this through the following:
 3. Owners of nodes will have a mechanism to specify resource usage permissions on said nodes.
 4. Researchers will have raw network access to the nodes running their experiment.
 
+## Team
+
+- Christine Wang, christine.wang@berkeley.edu
+- Jordon Wing, jordonwing@berkeley.edu
+- Kevin Tran, kevin.tran@berkeley.edu
+- Krystyn Neisess, kneisess@berkeley.edu
+- Yizhe Liu, yizow@berkeley.edu
+
 # Motivation
 
 A major benefit to having a distributed experimentation system such as Asteroid-Lab is its ability to be geographically distributed. Being able to have individual experiment nodes and clusters of nodes located in different locales allows researchers to collect data that differs by location such as latency and local network topology. In addition, it allows us to build a more robust system that can remain online in the face of failure in certain nodes.
@@ -56,7 +64,7 @@ Our research indicates that Docker does the hard work for us here. By default, c
 
 # Materials
 
-We are requesting as many Raspberry Pis, with peripherals, as is possible. Because of the distributed nature of our system, we require a cluster of Raspberry Pi that we can control. At the least, we would like to have 10.
+We are requesting as many Raspberry Pis, with peripherals, as is possible. Because of the distributed nature of our system, we require a cluster of Raspberry Pi that we can control.
 
 - $N$ of Raspberry Pi Model 3 B, with peripherals for each:
     - 32 GB microSD card
