@@ -12,6 +12,14 @@ Specifically, Asteroid-Lab will accomplish this through the following:
 3. Owners of nodes will have a mechanism to specify resource usage permissions on said nodes.
 4. Researchers will have raw network access to the nodes running their experiment.
 
+## Team
+
+- Christine Wang, christine.wang@berkeley.edu
+- Jordon Wing, jordonwing@berkeley.edu
+- Kevin Tran, kevin.tran@berkeley.edu
+- Krystyn Neisess, kneisess@berkeley.edu
+- Yizhe Liu, yizow@berkeley.edu
+
 # Motivation
 
 A major benefit to having a distributed experimentation system such as Asteroid-Lab is its ability to be geographically distributed. Being able to have individual experiment nodes and clusters of nodes located in different locales allows researchers to collect data that differs by location such as latency and local network topology. In addition, it allows us to build a more robust system that can remain online in the face of failure in certain nodes.
@@ -40,7 +48,7 @@ Each node is a Raspberry Pi with Docker Engine installed, hosting at most one co
 ### Node discovery and resource allocation
 We are currently exploring two different ways of doing this.
 
-In the first, each Raspberry Pi is preconfigured with the public IP addresses of tracking servers. When a new node it boots up, it contacts one or more of these tracking servers (chosen according to location, or at random, etc. ). The node and server perform some authentication handshake to associate this node with an owner’s account. It also informs the tracking server of the hardware resources the node's owner has chosen to make available for Asteroid-Lab, and periodically updates this information. Tracking servers are responsible for maintaining a list of uniquely identifiable nodes, tracking what resources are available on each node, and responding to resource allocation requests.
+In the first, each Raspberry Pi is preconfigured with the public IP addresses of tracking servers. When a new node it boots up, it contacts one or more of these tracking servers (chosen according to location, or at random, etc.). The node and server perform some authentication handshake to associate this node with an owner’s account. It also informs the tracking server of the hardware resources the node's owner has chosen to make available for Asteroid-Lab, and periodically updates this information. Tracking servers are responsible for maintaining a list of uniquely identifiable nodes, tracking what resources are available on each node, and responding to resource allocation requests. In this way, they play a similar role to Aggregate Managers in the [GENI architecture](http://www.geni.net/documentation/geni-architecture/) and Management Authorities in the [Planet-Lab architecture](https://www.planet-lab.org/files/pdn/PDN-06-031/pdn-06-031.pdf).
 
 Resource allocation requests come from a server interface used by experimenters. This server will ask each tracking server for a lease on resources that match a hardware requirement specification provided by the experimenter. The particular details of the specification still need to be hashed out.
 
@@ -48,15 +56,15 @@ We’ve also considered having nodes self-organize to reduce the load on trackin
 
 It seems possible that we could merge these two designs by, for example, having the nodes choose other nodes as tracking servers for various time intervals.
 
-
 ### Node control and isolation
-Docker provides built-in mechanisms for container orchestration, resource limitation, and isolation.
+We hope to leverage [Docker Swarm](https://docs.docker.com/engine/swarm/) to orchestrate the nodes in a single slice for each experiment and keep experiments isolated from each other and from the host machines.
 
 ### Raw network access for experiments
+Our research indicates that Docker does the hard work for us here. By default, containers have their own network interface, isolated from the host. We’re still determining how exactly to make containers networks isolated from each other, but this is certainly possible. [Overlay networks in Swarm mode](https://docs.docker.com/engine/userguide/networking/#/an-overlay-network-with-docker-engine-swarm-mode) look particularly promising.
 
 # Materials
 
-We are requesting as many Raspberry Pis, with peripherals, as is possible. Because of the distributed nature of our system, we require a cluster of Raspberry Pi that we can control. At the least, we would like to have 10.
+We are requesting as many Raspberry Pis, with peripherals, as is possible. Because of the distributed nature of our system, we require a cluster of Raspberry Pi that we can control.
 
 - $N$ of Raspberry Pi Model 3 B, with peripherals for each:
     - 32 GB microSD card
