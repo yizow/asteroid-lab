@@ -1,0 +1,22 @@
+Overall, looks like a good start.
+
+A few comments:
+
+a)  You only need 1 RPi for prototyping, I will provide this in class.
+
+b) The focus should be primarily on the network control: You should
+for now just take a simple file that can have 3 different rule types
+for an experiment:
+
+    1:  Subnets, protocol, and port combinations allowed and denied
+
+    2:  Bandwidth limits per unit time
+
+These should be enforced.  For IP fragmentation, you should reassemble
+fragments both inbound and outbound before passing traffic on to
+ensure consistency and enforcement of the rules.
+
+Bandwidth limits should use some form of leaky token bucket approach,
+where you can burst temporarily above the limit but the sustained rate
+is as specified.
+
