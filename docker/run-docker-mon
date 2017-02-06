@@ -1,0 +1,21 @@
+#!/bin/bash
+
+iptables -I FORWARD -o docker0 -j NFQUEUE --queue-num 1 && iptables -I FORWARD -i docker0 -j NFQUEUE --queue-num 0 
+
+if [ $? -ne 0 ]; then
+	echo "nfqueue iptables insertion commands failed." >&2
+	echo "iptables may be in an inconsistent state." >&2
+	echo "Please check to make sure nothing is wrong before running again." >&2
+	exit 1
+fi
+
+/usr/bin/docker-mon
+
+iptables -D FORWARD 1 && iptables -D FORWARD 1
+
+if [ $? -ne 0 ]; then
+	echo "nfqueue iptables deletion commands failed." >&2
+	echo "iptables may be in an inconsistent state." >&2
+	echo "Please check to make sure nothing is wrong before running again." >&2
+	exit 1
+fi
