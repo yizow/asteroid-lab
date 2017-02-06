@@ -10,4 +10,4 @@ The container will modify the host's `iptables` entries to redirect traffic comi
 
 # Running
 
-`docker run --privileged -t --net=host cs194/asteroid-lab`
+`docker run --privileged -it --net=host cs194/asteroid-lab`
