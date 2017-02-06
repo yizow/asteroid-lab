@@ -1,0 +1,107 @@
+#!/usr/bin/env python
+import nfqueue
+import multiprocessing
+from scapy.all import *
+
+addition = "<h2>and scapy/netfilter</h2>\n"
+
+def input_callback(_, payload):
+	data = payload.get_data()
+	pkt = IP(data)
+
+	print("[I] {}".format(pkt.summary()))
+
+	if "google" in str(pkt[TCP].payload):
+		print("[I] Matched drop criteria, dropping packet.")
+		payload.set_verdict(nfqueue.NF_DROP)
+
+		pkt1 = pkt.copy()
+		del pkt1[TCP].payload
+		pkt1[TCP].flags = 0x04
+		pkt1[TCP].ack = 0
+		pkt1[TCP].dataofs = 5L
+		pkt1[TCP].window = 0
+		pkt1[TCP].options = {}
+		del pkt1[IP].len
+		del pkt1[TCP].chksum
+		del pkt1.chksum
+
+		pkt2 = pkt1.copy()
+		pkt2[TCP].seq += len(pkt)
+		pkt2[TCP].sport, pkt2[TCP].dport = pkt2[TCP].dport, pkt2[TCP].sport
+		pkt2[IP].src, pkt2[IP].dst = "10.0.0.6", pkt2[IP].src
+		pkt2[IP].id += 1
+		del pkt2[TCP].chksum
+		del pkt2.chksum
+
+		# pkt1.show2()
+		# pkt2.show2()
+
+		send(pkt1)
+		send(pkt2)
+	else:
+		payload.set_verdict(nfqueue.NF_ACCEPT)
+
+def output_callback(_, payload):
+	data = payload.get_data()
+	pkt = IP(data)
+
+	print("[O] {}".format(pkt.summary()))
+
+	data = str(pkt[TCP].payload)
+
+	if len(data) > 0:
+		print 'Data: '+ data
+
+	if "200 OK" in data:
+		headers = data.split("\r\n")
+
+		for i in range(len(headers)):
+			if "Content-Length" in headers[i]:
+				cur_len = int(headers[i].split(": ")[1])
+				headers[i] = "Content-Length: {}".format(cur_len + len(addition))
+				pkt[TCP].payload = "\r\n".join(headers)
+				break
+
+		print("MODIFIED PAYLOAD: Content-Length modification.")
+
+		del pkt[TCP].chksum
+		del pkt.chksum
+
+	if "Docker" in data:
+		pkt[TCP].payload = data + addition
+		pkt[IP].len += len(addition)
+
+		print("MODIFIED PAYLOAD: {}".format(addition))
+
+		del pkt[TCP].chksum
+		del pkt.chksum
+
+	# pkt.show()
+	payload.set_verdict_modified(nfqueue.NF_ACCEPT, str(pkt), len(pkt))
+
+def listen(queue_num, callback):
+	q = nfqueue.queue()
+	q.open()
+	q.bind(socket.AF_INET)
+	q.set_callback(callback)
+	q.create_queue(queue_num)
+	try:
+		print("Listening on queue {}".format(queue_num))
+		q.try_run() # Main loop
+	except:
+		q.unbind(socket.AF_INET)
+		q.close()
+
+def main():
+	proc_in = multiprocessing.Process(target=listen, args=(1, input_callback))
+	proc_out = multiprocessing.Process(target=listen, args=(0, output_callback))
+
+	proc_in.start()
+	proc_out.start()
+
+	proc_in.join()
+	proc_out.join()
+
+main()
+
