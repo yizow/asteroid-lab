@@ -103,11 +103,11 @@ _The target bandwidth for all containers combined._
 - Default if not present: containers can use all available bandwidth. If `bandwidth-limits` is specified, **both** `upload` and `download` must be specified.
 - Limits must be greater than 0 if specified.
 - Example:
-    ```yaml
-    bandwidth-limits:
-        upload: 1000
-        download: 1000
-    ```
+```yaml
+bandwidth-limits:
+    upload: 1000
+    download: 1000
+```
 
 ---
 
@@ -127,16 +127,16 @@ _Packet-handling behavior for packets destined for certain IP addresses._
     - `log` (optional, default: `false`): `true`, `false` (false if not present).
     - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
 - Example:
-    ```yaml
-    ip-rules:
-        - ip: 216.58.192.14
-          protocol: tcp
-          port: !1:1024 (applies to all ports except those between 1 and 1024)
-          behavior: drop
-          direction: to
-          log: true
-          logfile: log.txt (will be stored on host filesystem)
-    ```
+```yaml
+ip-rules:
+    - ip: 216.58.192.14
+      protocol: tcp
+      port: !1:1024 (applies to all ports except those between 1 and 1024)
+      behavior: drop
+      direction: to
+      log: true
+      logfile: log.txt (will be stored on host filesystem)
+```
 
 ---
 
@@ -156,20 +156,20 @@ _Packet-handling behavior for packets destined for certain hostnames._
     - `log` (optional, default: `false`): `true`, `false` (false if not present).
     - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
 - Example:
-    ```yaml
-    hostname-rules:
-        - host: google.com
-          protocol: tcp
-          port: !1:1024 (applies to all ports except those between 1 and 1024)
-          behavior: drop
-          direction: to
-          log: true
-          logfile: log.txt (will be stored on host filesystem)
-        - host: qq.com
-          protocol: udp
-          behavior: drop
-          direction: from
-    ```
+```yaml
+hostname-rules:
+    - host: google.com
+      protocol: tcp
+      port: !1:1024 (applies to all ports except those between 1 and 1024)
+      behavior: drop
+      direction: to
+      log: true
+      logfile: log.txt (will be stored on host filesystem)
+    - host: qq.com
+      protocol: udp
+      behavior: drop
+      direction: from
+```
 
 ## IV. Default Owner Configuration File
 
