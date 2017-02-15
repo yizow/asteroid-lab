@@ -1,0 +1,9 @@
+#!/bin/bash
+
+FILE={filename}
+
+sudo ifconfig docker0 txqueuelen 1000
+sudo wondershaper docker0 {download_bw} {upload_bw}
+sudo tc qdisc add dev docker0 root netem delay 0.5ms
+sudo snort --daq afpacket -i eth0:docker0 -c $FILE -Q
+sudo wondershaper clear docker0

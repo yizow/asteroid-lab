@@ -1,0 +1,30 @@
+version: 0.0.0
+
+bandwidth-limits:
+        upload: 50000
+        download: 50000
+
+ip-rules: 
+        - ip: 128.32.134.231
+          protocol: tcp
+          port: 443
+          behavior: reject
+          direction: both
+          log: true
+          logfile: 162.txt
+
+hostname-rules:
+        - host: ktomega.net
+          protocol: tcp
+          port: any
+          behavior: drop
+          direction: both
+          log: true
+          logfile: sv.txt
+        - host: www.google.com
+          protocol: tcp
+          port: any
+          behavior: log
+          direction: to
+          log: true
+          logfile: goog.txt 
