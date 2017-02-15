@@ -1,9 +1,14 @@
+
 # Asteroid Lab Owner Specification
 
 ## Contents
+
 i. Introduction
+
 ii. Key Design Decisions
+
 iii. Rules Specification
+
 iv. Default Owner Configuration File
 
 ## I. Introduction
@@ -87,8 +92,8 @@ _The maximum amount of memory a container can use._
 
 ```
 bandwidth-limits:
-    - upload: <upload limit>
-    - download: <download limit>
+    upload: <upload limit>
+    download: <download limit>
 ```
 
 _The target bandwidth for all containers combined._
@@ -100,8 +105,8 @@ _The target bandwidth for all containers combined._
 - Example:
     ```yaml
     bandwidth-limits:
-        - upload: 1000
-        - download: 1000
+        upload: 1000
+        download: 1000
     ```
 
 ---
@@ -115,24 +120,22 @@ _Packet-handling behavior for packets destined for certain IP addresses._
 - Default if not present: No rules.
 - Rule formatting:
     - `ip` (required): IP address.
-        - `protocol` (required): `tcp`, `udp`, `icmp`, `ip`.
-        - `port` (optional, default: `any`): can be ports, static port definitions, ranges, and can have negation.
-        - `behavior` (required): `alert`, `log`, `pass`, `activate`, `dynamic`, `drop`, `reject`, `sdrop`. See Snort manual for descriptions of each type.
-        - `direction` (required): `to` (applies only to packets going to the specified IP address), `from` (applies only to packets coming from the specified IP address), `both`.
-        - `log` (optional, default: `false`): `true`, `false` (false if not present).
-        - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
+    - `protocol` (required): `tcp`, `udp`, `icmp`, `ip`.
+    - `port` (optional, default: `any`): can be ports, static port definitions, ranges, and can have negation.
+    - `behavior` (required): `alert`, `log`, `pass`, `activate`, `dynamic`, `drop`, `reject`, `sdrop`. See Snort manual for descriptions of each type.
+    - `direction` (required): `to` (applies only to packets going to the specified IP address), `from` (applies only to packets coming from the specified IP address), `both`.
+    - `log` (optional, default: `false`): `true`, `false` (false if not present).
+    - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
 - Example:
     ```yaml
     ip-rules:
         - ip: 216.58.192.14
-            - protocol: tcp
-            - port: !1:1024 (applies to all ports except those between 1 and 1024)
-            - behavior: drop
-            - direction: to
-            - log: true
-            - logfile: log.txt (will be stored on host filesystem)
-        - ip: 192.168.1.254
-            - protocol: 
+          protocol: tcp
+          port: !1:1024 (applies to all ports except those between 1 and 1024)
+          behavior: drop
+          direction: to
+          log: true
+          logfile: log.txt (will be stored on host filesystem)
     ```
 
 ---
@@ -146,26 +149,26 @@ _Packet-handling behavior for packets destined for certain hostnames._
 - Default if not present: No rules.
 - Rule formatting:
     - `host` (required): hostname.
-        - `protocol` (required): `tcp`, `udp`, `icmp`, `ip`.
-        - `behavior` (required): `alert`, `log`, `pass`, `activate`, `dynamic`, `drop`, `reject`, `sdrop`. See Snort manual for descriptions of each type.
-        - `port` (optional, default: `any`): can be ports, static port definitions, ranges, and can have negation.
-        - `direction` (required): `to` (applies only to packets going to the specified IP address), `from` (applies only to packets coming from the specified IP address), `both`.
-        - `log` (optional, default: `false`): `true`, `false` (false if not present).
-        - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
+    - `protocol` (required): `tcp`, `udp`, `icmp`, `ip`.
+    - `behavior` (required): `alert`, `log`, `pass`, `activate`, `dynamic`, `drop`, `reject`, `sdrop`. See Snort manual for descriptions of each type.
+    - `port` (optional, default: `any`): can be ports, static port definitions, ranges, and can have negation.
+    - `direction` (required): `to` (applies only to packets going to the specified IP address), `from` (applies only to packets coming from the specified IP address), `both`.
+    - `log` (optional, default: `false`): `true`, `false` (false if not present).
+    - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
 - Example:
     ```yaml
     hostname-rules:
         - host: google.com
-            - protocol: tcp
-            - port: !1:1024 (applies to all ports except those between 1 and 1024)
-            - behavior: drop
-            - direction: to
-            - log: true
-            - logfile: log.txt (will be stored on host filesystem)
+          protocol: tcp
+          port: !1:1024 (applies to all ports except those between 1 and 1024)
+          behavior: drop
+          direction: to
+          log: true
+          logfile: log.txt (will be stored on host filesystem)
         - host: qq.com
-            - protocol: udp
-            - behavior: drop
-            - direction: from
+          protocol: udp
+          behavior: drop
+          direction: from
     ```
 
 ## IV. Default Owner Configuration File
