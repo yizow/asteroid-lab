@@ -1,9 +1,9 @@
-version: 0.0.0
+version: '0.0.0'
 bandwidth-limits:
   upload: 1000 # 1 MB
   download: 1000
 ip-rules:
-  - ip: 172.217.5.110 # google.com
+  - ip: '172.217.5.110' # google.com
     protocol: 'tcp'
     port: '1:1024'
     behavior: 'drop'
@@ -15,5 +15,5 @@ hostname-rules:
     protocol: 'tcp'
     behavior: 'drop'
     direction: 'from'
-    log: true
+    log: 'true'
     logfile: 'hostlog.txt'
