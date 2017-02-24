@@ -10,6 +10,9 @@ RUN apt-get update
 
 ### INSTALLATIONS ###
 
+RUN apt-get install -y python python-pip
+RUN pip install pyyaml docker
+
 # Wondershaper
 
 RUN apt-get install -y make git 
@@ -33,6 +36,8 @@ RUN bash /home/init_wondershaper.sh
 # Pre-installation
 RUN apt-get install -y iputils-ping dnsutils wget curl iptables net-tools \
                        whois tcpdump python3
+
+
 RUN apt-get install -y flex bison build-essential checkinstall libpcap-dev \
                        libnet1-dev libpcre3-dev libnetfilter-queue-dev \
                        iptables-dev libdumbnet-dev zlib1g-dev
@@ -40,7 +45,7 @@ RUN apt-get install -y flex bison build-essential checkinstall libpcap-dev \
 ### COPYING FILES POST-INSTALLATION ###
 
 # General Config
-COPY ["config.yaml", "config.py", "start_experiment", "/home/"]
+COPY ["config.yaml", "config.py", "start_experiment.py", "/home/"]
 
 # Snort
 COPY ["snort/snort.conf", "/etc/snort/snort.conf"]
@@ -48,4 +53,6 @@ COPY ["snort/snort.conf", "/etc/snort/snort.conf"]
 COPY ["asteroidlab-iptables-backup", "/home/"]
 
 # ENTRYPOINT ["python3", "config.py", "config.yaml"]
+
+# ENTRYPOINT ["python", "config.py"]
 ENTRYPOINT ["bash"]
