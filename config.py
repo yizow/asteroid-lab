@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import atexit
+import pdb
 import snort
 import stat
 import sys
@@ -17,7 +18,7 @@ def read_file(filename):
     return data
 
 def main():
-    if len(sys.argv != 2):
+    if len(sys.argv) != 2:
         print("Please provide a config file.")
         return
     config_file = sys.argv[1]
@@ -25,12 +26,13 @@ def main():
     config_data = read_file(config_file)
     config_yaml = yaml.load(config_data)
 
-    traffic_shaping.limit_bandwidth(config_yaml["bandwidth-limits"]["upload"],
-                                    config_yaml["bandwidth-limits"]["download"])
+    bw_dict = config_yaml.get("bandwidth-limits")
+    if bw_dict != None:
+        traffic_shaping.limit_bandwidth(bw_dict.get("upload"), bw_dict.get("download"))
     snort.set_iptables()
-    snort.add_rules(config_yaml["ip-rules"])
-    snort.add_blacklisted_ips(config_yaml["blacklisted-ips"])
-    snort.add_whitelisted_ips(config_yaml["whitelisted-ips"])
+    snort.add_rules(config_yaml.get("ip-rules"))
+    snort.add_blacklisted_ips(config_yaml.get("blacklisted-ips"))
+    snort.add_whitelisted_ips(config_yaml.get("whitelisted-ips"))
 
 if __name__ == "__main__":
     main()
