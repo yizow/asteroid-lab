@@ -10,7 +10,9 @@ RUN apt-get update
 
 ### INSTALLATIONS ###
 
-RUN apt-get install -y python python-pip
+# Python 3
+
+RUN apt-get install -y python3 python3-pip
 RUN pip install pyyaml docker
 
 # Wondershaper
@@ -35,8 +37,7 @@ RUN bash /home/init_wondershaper.sh
 
 # Pre-installation
 RUN apt-get install -y iputils-ping dnsutils wget curl iptables net-tools \
-                       whois tcpdump python3
-
+                       whois tcpdump
 
 RUN apt-get install -y flex bison build-essential checkinstall libpcap-dev \
                        libnet1-dev libpcre3-dev libnetfilter-queue-dev \
@@ -52,7 +53,5 @@ COPY ["snort/snort.conf", "/etc/snort/snort.conf"]
 # Not 100% sure where this needs to go:
 COPY ["asteroidlab-iptables-backup", "/home/"]
 
-# ENTRYPOINT ["python3", "config.py", "config.yaml"]
-
-# ENTRYPOINT ["python", "config.py"]
+# ENTRYPOINT ["python3", "config.py"]
 ENTRYPOINT ["bash"]
