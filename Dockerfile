@@ -6,9 +6,12 @@ FROM resin/rpi-raspbian:latest
 RUN apt-get update
 # TODO add all packages for wondershaper + snort
 RUN apt-get install -y iputils-ping dnsutils wget curl iptables net-tools \
-                       whois tcpdump
+                       whois tcpdump \
+                       python python-pip
+
+RUN pip install pyyaml docker
 
 COPY ["config.yaml", "config.py", "start_experiment.py", "."]
 COPY ["snort/snort.conf", "/etc/snort/snort.conf"]
 
-ENTRYPOINT ["python", "config.py", "config.yaml"]
+ENTRYPOINT ["python", "config.py"]
