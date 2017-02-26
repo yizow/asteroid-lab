@@ -46,13 +46,30 @@ RUN apt-get install -y flex bison build-essential checkinstall libpcap-dev \
                        libnet1-dev libpcre3-dev libnetfilter-queue-dev \
                        iptables-dev libdumbnet-dev zlib1g-dev
 
+# DAQ installation
+COPY ["dockerfile_init/init_daq.sh", "/home/init_daq.sh"]
+RUN bash /home/init_daq.sh
+
+# Snort installation
+COPY ["dockerfile_init/init_snortinstall.sh", "/home/init_snortinstall.sh"]
+RUN bash /home/init_snortinstall.sh
+
+# Snort post-installation
+COPY ["dockerfile_init/init_snortpostinstall.sh", "/home/init_snortpostinstall.sh"]
+RUN bash /home/init_snortpostinstall.sh
+
+# Snort copy config and rules files
+COPY ["snort/snort.conf", "/etc/snort/snort.conf"]
+COPY ["snort/rules/local.rules", "/etc/snort/rules/local.rules"]
+COPY ["snort/rules/white_list.rules", "/etc/snort/rules/white_list.rules"]
+COPY ["snort/rules/black_list.rules", "/etc/snort/rules/black_list.rules"]
+
 ### COPYING FILES POST-INSTALLATION ###
 
 # General Config
 COPY ["config.yaml", "config.py", "start_experiment.py", "/home/"]
 
 # Snort
-COPY ["snort/snort.conf", "/etc/snort/snort.conf"]
 # Not 100% sure where this needs to go:
 COPY ["asteroidlab-iptables-backup", "/home/"]
 
