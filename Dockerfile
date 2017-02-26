@@ -4,6 +4,7 @@
 FROM resin/rpi-raspbian:latest
 
 RUN apt-get update
+RUN apt-get install -y vim
 # Commented out for now 'cause it takes quite a while to execute,
 # and is not needed for Wondershaper testing.
 # RUN apt-get upgrade -y
@@ -13,7 +14,9 @@ RUN apt-get update
 # Python 3
 
 RUN apt-get install -y python3 python3-pip
-RUN pip install pyyaml docker
+COPY ["dockerfile_init/init_pipinstall.sh", "/home/init_pipinstall.sh"]
+RUN bash /home/init_pipinstall.sh
+# RUN pip install pyyaml docker
 
 # Wondershaper
 
