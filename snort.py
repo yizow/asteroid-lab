@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
-from subprocess import PIPE
+from subprocess import PIPE, STDOUT
 import shlex
 
 LOCAL_RULES_FILE = "/etc/snort/rules/local.rules"
@@ -51,18 +51,19 @@ def add_whitelisted_ips(ips_list):
         _write_file(WHITELIST_FILE, whitelist)
 
 def set_iptables():
-    subprocess.call(shlex.split("sudo iptables-backup > " + IPTABLES_BACKUP_FILE), \
-                    stderr=PIPE)
-    popen = subprocess.call(shlex.split("sudo iptables-restore < " + ASTEROIDLAB_IPTABLES_FILE), \
-                            stderr=PIPE)
+    with open(IPTABLES_BACKUP_FILE, "w") as backup_file:
+        subprocess.call(shlex.split("sudo iptables-backup"), stdin=STDOUT, stdout=backup_file, stderr=STDOUT)
+    with open(ASTEROIDLAB_IPTABLES_FILE, "r") as asteroidlab_file:
+        subprocess.call(shlex.split("sudo iptables-restore"), stdin=asteroidlab_file, stdout=STDOUT, stderr=STDOUT)
+
     for stdout_line in iter(popen.stdout.readline, ""):
         yield stdout_line 
     popen.stdout.close()
 
 def restore_iptables():
     subprocess.call(shlex.split("sudo iptables-restore < " + IPTABLES_BACKUP_FILE), \
-                    stderr=PIPE)
+                    stderr=STDOUT)
 
 def start_snort():
     subprocess.call(shlex.split("sudo snort -Q --daq nfq --daq-dir " + DAQ_DIR + " -c " + SNORT_CONF), \
-                    stderr=PIPE)
+                    stderr=STDOUT)

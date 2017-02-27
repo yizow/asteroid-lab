@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import subprocess
+from subprocess import STDOUT
 import shlex
 
 def _fix_queuelen(length=1000):
-    subprocess.Popen(shlex.split("sudo ifconfig docker0 txqueuelen " + str(length)), \
-                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.call(shlex.split("sudo ifconfig docker0 txqueuelen " + str(length)), \
+                                 stdout=STDOUT, stderr=STDOUT)
 
 def limit_bandwidth(upload_bw, download_bw):
     # Make sure txqueuelen is nonzero for Wondershaper
@@ -14,13 +15,13 @@ def limit_bandwidth(upload_bw, download_bw):
     if upload_bw == None or upload_bw <= 1 or download_bw == None or download_bw <= 1:
         raise ValueError("Upload bandwidth and download bandwidth must be greater than 1")
 
-    process = subprocess.Popen(shlex.split("sudo wondershaper docker0 " + str(download_bw) + " " + str(upload_bw)), \
-                                               stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.call(shlex.split("sudo wondershaper docker0 " + str(download_bw) + " " + str(upload_bw)), \
+                                          stdout=STDOUT, stderr=STDOUT)
     process.communicate()
     exit_code = process.wait()
     return exit_code
 
 
 def reset():
-    subprocess.Popen(shlex.split("sudo wondershaper clear docker0"), \
-                     stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.call(shlex.split("sudo wondershaper clear docker0"), \
+                    stdout=STDOUT, stderr=STDOUT)
