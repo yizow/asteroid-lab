@@ -33,6 +33,7 @@ def main():
     snort.add_rules(config_yaml.get("ip-rules"))
     snort.add_blacklisted_ips(config_yaml.get("blacklisted-ips"))
     snort.add_whitelisted_ips(config_yaml.get("whitelisted-ips"))
+    snort.start_snort()
 
 if __name__ == "__main__":
     main()
