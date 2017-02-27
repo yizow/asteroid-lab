@@ -1,4 +1,7 @@
 # Pass by default (TODO: implement reassembly by checking contents)
 
+alert tcp any any -> any any(msg:"test .com"; pcre:"(/.*\.com/i"; sid: 100001; rev:1;)
+alert tcp any any -> any any(msg:"test .edu"; pcre:"(/.*\.edu/i"; sid: 100002; rev:1;)
+alert tcp any any -> any any(msg:"test google.com"; pcre:"(/.*\google.com/i"; sid: 100003; rev:1;)
 drop ( msg: "REPUTATION_EVENT_WHITELIST"; sid: 1; gid: 136; rev: 1; metadata: rule-type preproc ; classtype:bad-unknown; )
 alert ( msg: "REPUTATION_EVENT_WHITELIST"; sid: 2; gid: 136; rev: 1; metadata: rule-type preproc ; classtype:bad-unknown; )
