@@ -1,6 +1,4 @@
 # Pass by default (TODO: implement reassembly by checking contents)
 
-include ../snort.conf
-
 drop ( msg: "REPUTATION_EVENT_WHITELIST"; sid: 1; gid: 136; rev: 1; metadata: rule-type preproc ; classtype:bad-unknown; )
 alert ( msg: "REPUTATION_EVENT_WHITELIST"; sid: 2; gid: 136; rev: 1; metadata: rule-type preproc ; classtype:bad-unknown; )
