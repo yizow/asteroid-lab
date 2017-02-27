@@ -52,13 +52,9 @@ def add_whitelisted_ips(ips_list):
 
 def set_iptables():
     with open(IPTABLES_BACKUP_FILE, "w") as backup_file:
-        subprocess.call(shlex.split("sudo iptables-backup"), stdin=STDOUT, stdout=backup_file, stderr=STDOUT)
+        subprocess.call(shlex.split("sudo iptables-save"), stdout=backup_file)
     with open(ASTEROIDLAB_IPTABLES_FILE, "r") as asteroidlab_file:
-        subprocess.call(shlex.split("sudo iptables-restore"), stdin=asteroidlab_file, stdout=STDOUT, stderr=STDOUT)
-
-    for stdout_line in iter(popen.stdout.readline, ""):
-        yield stdout_line 
-    popen.stdout.close()
+        subprocess.call(shlex.split("sudo iptables-restore"), stdin=asteroidlab_file, stderr=STDOUT)
 
 def restore_iptables():
     subprocess.call(shlex.split("sudo iptables-restore < " + IPTABLES_BACKUP_FILE), \
