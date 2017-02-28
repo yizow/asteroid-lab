@@ -126,6 +126,7 @@ _Packet-handling behavior for packets destined for certain IP addresses._
     - `direction` (required): `to` (applies only to packets going to the specified IP address), `from` (applies only to packets coming from the specified IP address), `both`.
     - `log` (optional, default: `false`): `true`, `false` (false if not present).
     - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
+    - `snort-options` (optional, default: none): Snort options, in parens and surrounded by single quotes. These will be pasted directly into the `local.rules`.
 - Example:
 ```yaml
 ip-rules:
@@ -155,6 +156,7 @@ _Packet-handling behavior for packets destined for certain hostnames._
     - `direction` (required): `to` (applies only to packets going to the specified IP address), `from` (applies only to packets coming from the specified IP address), `both`.
     - `log` (optional, default: `false`): `true`, `false` (false if not present).
     - `logfile` (optional, default: none): file to log to, relative to working directory of machine (no effect if `log` is false).
+    - `snort-options` (optional, default: none): Snort options, in parentheses and surrounded by single quotes. These will be pasted directly into the `local.rules`, so it's important that they be formatted correctly. It is recommended that you set the `gid` on your rules, starting from 200000 (100000 - 199999 are reserved for Asteroid-lab generated options).
 - Example:
 ```yaml
 hostname-rules:
@@ -165,6 +167,7 @@ hostname-rules:
       direction: to
       log: true
       logfile: log.txt (will be stored on host filesystem)
+      snort-options: '(msg:"test google.com"; pcre:"(/.*\google.com/i"; sid: 100003; rev:1;)'
     - host: qq.com
       protocol: udp
       behavior: drop
