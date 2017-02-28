@@ -78,5 +78,8 @@ COPY ["config.yaml", "config.py", "start_experiment.py", "/home/"]
 # Not 100% sure where this needs to go:
 COPY ["asteroidlab-iptables-backup", "/home/"]
 
+# Docker - new bashrc to start daemon on startup
+COPY ["dockerfile_init/new_bash.bashrc", "/etc/bash.bashrc"]
+
 # ENTRYPOINT ["python3", "config.py"]
 ENTRYPOINT ["bash"]
