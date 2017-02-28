@@ -64,6 +64,11 @@ COPY ["snort/rules/local.rules", "/etc/snort/rules/local.rules"]
 COPY ["snort/rules/white_list.rules", "/etc/snort/rules/white_list.rules"]
 COPY ["snort/rules/black_list.rules", "/etc/snort/rules/black_list.rules"]
 
+# Docker
+
+COPY ["dockerfile_init/init_docker.sh", "/home/init_docker.sh"]
+RUN bash /home/init_docker.sh
+
 ### COPYING FILES POST-INSTALLATION ###
 
 # General Config
