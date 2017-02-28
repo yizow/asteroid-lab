@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import atexit
 import pdb
 import snort
@@ -18,22 +19,26 @@ def read_file(filename):
     return data
 
 def main():
-    if len(sys.argv) != 2:
-        print("Please provide a config file.")
-        return
-    config_file = sys.argv[1]
+    parser = argparse.ArgumentParser(description="Configure Asteroid-Lab monitor container with appropriate rules.")
+    parser.add_argument("config", help="Config file to determine container limitations.")
+    parser.add_argument("--snort-rules", help="User-provided Snort rules.")
+    args = parser.parse_args()
 
-    config_data = read_file(config_file)
+    pdb.set_trace()
+    snort_rules_file = args.snort_rules
+
+    config_data = read_file(args.config)
     config_yaml = yaml.load(config_data)
 
     bw_dict = config_yaml.get("bandwidth-limits")
     if bw_dict != None:
         traffic_shaping.limit_bandwidth(bw_dict.get("upload"), bw_dict.get("download"))
+
     snort.set_iptables()
     snort.add_rules(config_yaml.get("ip-rules"))
     snort.add_blacklisted_ips(config_yaml.get("blacklisted-ips"))
     snort.add_whitelisted_ips(config_yaml.get("whitelisted-ips"))
-    snort.start_snort()
+    snort.start_snort(snort_rules=snort_rules_file)
 
 if __name__ == "__main__":
     main()
