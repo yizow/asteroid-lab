@@ -4,7 +4,7 @@
 FROM resin/rpi-raspbian:latest
 
 RUN apt-get update
-RUN apt-get install -y vim
+# RUN apt-get install -y vim
 # Commented out for now 'cause it takes quite a while to execute,
 # and is not needed for Wondershaper testing.
 # RUN apt-get upgrade -y
@@ -20,7 +20,7 @@ RUN bash /home/init_pipinstall.sh
 
 # Wondershaper
 
-RUN apt-get install -y make git 
+# RUN apt-get install -y make git 
 
 # Interestng observation:  
 
@@ -33,14 +33,15 @@ RUN apt-get install -y make git
 # However, if a bash script containing these 4 lines is copied over
 # and run like so, no error is thrown, and the script executes
 # as expected.
-COPY ["dockerfile_init/init_wondershaper.sh", "/home/init_wondershaper.sh"]
-RUN bash /home/init_wondershaper.sh
+# COPY ["dockerfile_init/init_wondershaper.sh", "/home/init_wondershaper.sh"]
+# RUN bash /home/init_wondershaper.sh
 
 # Snort
 
 # Pre-installation
-RUN apt-get install -y iputils-ping dnsutils wget curl iptables net-tools \
-                       whois tcpdump
+# RUN apt-get install -y iputils-ping dnsutils wget curl iptables net-tools \
+#                        whois tcpdump wondershaper
+RUN apt-get install -y iptables net-tools wondershaper
 
 RUN apt-get install -y flex bison build-essential checkinstall libpcap-dev \
                        libnet1-dev libpcre3-dev libnetfilter-queue-dev \
@@ -72,7 +73,8 @@ RUN bash /home/init_docker.sh
 ### COPYING FILES POST-INSTALLATION ###
 
 # General Config
-COPY ["config.yaml", "config.py", "start_experiment.py", "/home/"]
+COPY ["config.py", "start_experiment.py", "/home/"]
+COPY ["snort.py", "traffic_shaping.py", "/home/"]
 
 # Snort
 # Not 100% sure where this needs to go:
@@ -81,5 +83,11 @@ COPY ["asteroidlab-iptables-backup", "/home/"]
 # Docker - new bashrc to start daemon on startup
 COPY ["dockerfile_init/new_bash.bashrc", "/etc/bash.bashrc"]
 
-# ENTRYPOINT ["python3", "config.py"]
-ENTRYPOINT ["bash"]
+WORKDIR /home/
+
+ENV CONFIG_FILE=config.py
+COPY ["$CONFIG_FILE", "/home/"]
+
+ENTRYPOINT ["python3"]
+CMD [$CONFIG_FILE]
+# ENTRYPOINT ["bash"]

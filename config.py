@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import atexit
-import pdb
 import snort
 import stat
 import sys
@@ -24,7 +23,6 @@ def main():
     parser.add_argument("--snort-rules", help="User-provided Snort rules.")
     args = parser.parse_args()
 
-    pdb.set_trace()
     snort_rules_file = args.snort_rules
 
     config_data = read_file(args.config)
@@ -38,7 +36,7 @@ def main():
     snort.add_rules(config_yaml.get("ip-rules"))
     snort.add_blacklisted_ips(config_yaml.get("blacklisted-ips"))
     snort.add_whitelisted_ips(config_yaml.get("whitelisted-ips"))
-    snort.start_snort(snort_rules=snort_rules_file)
+    snort.start_snort(snort_rules_file=snort_rules_file)
 
 if __name__ == "__main__":
     main()
