@@ -1,6 +1,40 @@
-# Lessons learned
+# Asteroid Lab: Lessons Learned
 
-## Traffic shaping
+## Contents
+
+i.  Then, and Now
+ii.  Supported Features
+iii.  Networking in Docker
+
+## I. Then, and Now
+
+In a nutshell, the goal of Asteroid Lab was to implement a distributed virtual network as a testbed for networking experiments.  In deviating from its predecessors, such as Planet Lab and GENI,  we strove to accomplish this with modern, easily-accessible sofware and hardware:  running Docker on Raspberry Pi's.
+
+The initial trajectory and scope for Asteroid Lab can be found in our repository's [README](https://github.com/yizow/asteroid-lab/blob/master/README.md).  However, over the several weeks following its drafing, both our focus as well as implementation direction have somewhat changed course.  Specifically, attention was heavily directed towards the feasibility of providing network security on behalf of the owner of a volunteered machine, whilst allowing otherwise raw network access to experimentors.
+
+This document serves to describe the current implementation of Asteroid Lab, as well as the myriad difficulties and decisions encountered along the way.
+
+## II. Supported Features
+
+Asteriod Lab guarantees that any owner of a machine volunteered into Asteroid Lab's network can define limits on the hardware and network resources available to experiments.  Specifically, one can restrict operations or filter traffic by:
+
+- CPU usage
+- Memory usage
+- Network bandwidth
+- IP address
+- Hostname
+- Port
+- Protocol
+
+See our [Owner Specification](https://github.com/yizow/asteroid-lab/blob/master/Asteroid%20Lab%20Owner%20Specification.md) for a detailing of the semantics and extent to which each can be done.
+
+## III. Networking in Docker
+
+### Environment Setup
+
+(Dockerfile details)
+
+### Traffic Shaping
 
 **Lessons learned:** Knowledge of Linux networking and terminology is helpful if you want to really understand the quirks of Docker networking. The solution to your problem may be simpler than you expect. 
 
@@ -14,7 +48,7 @@
 
 The value was `0` by default, so Wondershaper would end up dropping all packets. Easily fixed by running `sudo ifconfig docker0 txqueuelen <nonzero queue length>`
 
-## Snort
+### Packet Sniffing/Dropping
 
 **Lessons learned:** Adding `config daq-mode: inline` to a Snort rule file, or even specifying `--daq-mode inline` on the command line, is *not* equivalent to specifying `-Q`.
 
@@ -24,9 +58,7 @@ The value was `0` by default, so Wondershaper would end up dropping all packets.
 
 **Solutions:** Adding `-Q` to the call to Snort, via lucky guess.
 
+### Ambiguous Packet Reassembly
 
-
-
-
-
+(packet reassembly protection/attacks details)
 
