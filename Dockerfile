@@ -74,7 +74,7 @@ RUN bash /home/init_docker.sh
 
 # General Config
 COPY ["config.py", "/home/"]
-COPY ["start_experiment.py", "start_experiment", "/home/"]
+COPY ["start_experiment.py", "/home/"]
 COPY ["snort.py", "traffic_shaping.py", "/home/"]
 
 # Snort

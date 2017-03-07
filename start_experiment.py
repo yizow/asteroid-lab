@@ -36,7 +36,8 @@ def main():
     if "memory" in config_yaml:
         cmd += " --memory=" + str(config_yaml["memory"])
     
-    subprocess.call(shlex.split("docker run " + image_name))
+    print(cmd)
+    subprocess.call(shlex.split(cmd + " " + image_name))
 
 if __name__ == "__main__":
     main()
