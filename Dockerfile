@@ -41,7 +41,7 @@ RUN bash /home/init_pipinstall.sh
 # Pre-installation
 # RUN apt-get install -y iputils-ping dnsutils wget curl iptables net-tools \
 #                        whois tcpdump wondershaper
-RUN apt-get install -y iptables net-tools wondershaper
+RUN apt-get install -y iptables net-tools wondershaper wget curl
 
 RUN apt-get install -y flex bison build-essential checkinstall libpcap-dev \
                        libnet1-dev libpcre3-dev libnetfilter-queue-dev \
@@ -73,7 +73,8 @@ RUN bash /home/init_docker.sh
 ### COPYING FILES POST-INSTALLATION ###
 
 # General Config
-COPY ["config.py", "start_experiment.py", "/home/"]
+COPY ["config.py", "/home/"]
+COPY ["start_experiment.py", "start_experiment", "/home/"]
 COPY ["snort.py", "traffic_shaping.py", "/home/"]
 
 # Snort
@@ -85,9 +86,9 @@ COPY ["dockerfile_init/new_bash.bashrc", "/etc/bash.bashrc"]
 
 WORKDIR /home/
 
-ENV CONFIG_FILE=config.py
+ARG CONFIG_FILE=config.yaml
 COPY ["$CONFIG_FILE", "/home/"]
 
 ENTRYPOINT ["python3"]
-CMD [$CONFIG_FILE]
+CMD ["/home/config.py", "config.yaml"]
 # ENTRYPOINT ["bash"]
